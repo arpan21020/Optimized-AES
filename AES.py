@@ -157,32 +157,32 @@ class AES:
         state=input.reshape(4,4)
         
         state=self.addRoundKey(state,w[0:4]).T
-        # print("state block after roundKey:", np.vectorize(hex)(state))
+        print("state block after roundKey:", np.vectorize(hex)(state))
         for round in range(1,Nr):
-            # print("------------Round :",round,"------------")
+            print("------------Round :",round,"------------")
             state=self.subBytes(state)
-            # print("state block after subByte:", np.vectorize(hex)(state))
+            print("state block after subByte:", np.vectorize(hex)(state))
         
             state=self.shiftRows(state)
-            # print("state block after shiftRows:", np.vectorize(hex)(state))
+            print("state block after shiftRows:", np.vectorize(hex)(state))
             
             state=self.mixColumns(state)
-            # print("state block after mixColumns:", np.vectorize(hex)(state))
+            print("state block after mixColumns:", np.vectorize(hex)(state))
             
             state=self.addRoundKey(state,w[4*round:4*round+4].T)
-            # print("key:",np.vectorize(hex)(w[4*round:4*round+4].T))
-            # print("state block after roundKey again:", np.vectorize(hex)(state))
+            print("key:",np.vectorize(hex)(w[4*round:4*round+4].T))
+            print("state block after roundKey again:", np.vectorize(hex)(state))
             
             
-        # print("==========================================")
+        print("==========================================")
         state=self.subBytes(state)
-        # print("state block after subBytes:", np.vectorize(hex)(state))
+        print("state block after subBytes:", np.vectorize(hex)(state))
         
         state=self.shiftRows(state)
-        # print("state block after shiftRows:", np.vectorize(hex)(state))
+        print("state block after shiftRows:", np.vectorize(hex)(state))
         
         state=self.addRoundKey(state,w[4*Nr:4*Nr+4].T)
-        # print("state block after round:", np.vectorize(hex)(state))
+        print("state block after round:", np.vectorize(hex)(state))
         
         return state
     
