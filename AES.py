@@ -2,6 +2,7 @@ import numpy as np
 import concurrent.futures
 
 class AES:
+    # S-box lookup table
     s_box = np.array([
     [0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76],
     [0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0],
@@ -21,6 +22,7 @@ class AES:
     [0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16]
     ], dtype=np.uint8)
     
+    # Inverse S-box lookup table
     inv_sbox = np.array([
     [0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB],
     [0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB],
@@ -83,6 +85,7 @@ class AES:
         ], dtype=np.uint8)
 
     def subWord(self,word):
+        #Apply S-box substitution to each byte in the word
         for a in range(len(word)):
             row=(word[a]>>4) & 0x0F
             col=word[a] & 0x0F
@@ -122,6 +125,7 @@ class AES:
                 
     
     def subBytes(self,state):
+        # Apply S-box substitution to each byte in the state
         rows,cols=state.shape
         for i in range(rows):
             for j in range(cols):
@@ -131,12 +135,13 @@ class AES:
         return state
     
     def shiftRows(self,state):
-
+        # Shift rows of state matrix.
         for row in range(4):
             state[row]=np.roll(state[row],-row)
         return state
 
     def mixColumns(self,state):
+        # Mix columns of state matrix using GF(2^8) arithmetic.
         result = np.zeros_like(state)
         for i in range(4):
             col = state[:, i]
@@ -148,6 +153,7 @@ class AES:
     
     
     def cipher(self,input,Nr,w):
+        # Main cipher function.
         state=input.reshape(4,4)
         
         state=self.addRoundKey(state,w[0:4]).T
